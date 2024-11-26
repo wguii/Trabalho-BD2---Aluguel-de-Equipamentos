@@ -1,0 +1,79 @@
+-- Tabela de Categorias
+CREATE TABLE Categorias (
+    CategoriaID INT PRIMARY KEY IDENTITY,
+    Nome VARCHAR(50) NOT NULL,
+    Descricao VARCHAR(255)
+);
+
+-- Tabela de Equipamentos
+CREATE TABLE Equipamentos (
+    EquipamentoID INT PRIMARY KEY IDENTITY,
+    Nome VARCHAR(50) NOT NULL,
+    CategoriaID INT NOT NULL,
+    Status VARCHAR(20) DEFAULT 'Disponível',
+    ValorDiaria DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID)
+);
+ALTER TABLE Equipamentos
+ADD Descricao VARCHAR(255) NOT NULL;
+
+
+-- Tabela de Clientes
+CREATE TABLE Clientes (
+    ClienteID INT PRIMARY KEY IDENTITY,
+    Nome VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Telefone VARCHAR(15) NOT NULL
+);
+
+-- Tabela de Endereços dos Clientes
+CREATE TABLE EnderecosClientes (
+    EnderecoID INT PRIMARY KEY IDENTITY,
+    ClienteID INT NOT NULL,
+    Logradouro VARCHAR(100),
+    Cidade VARCHAR(50),
+    Estado VARCHAR(50),
+    CEP VARCHAR(10),
+    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
+);
+
+-- Tabela de Aluguéis
+CREATE TABLE Alugueis (
+    AluguelID INT PRIMARY KEY IDENTITY,
+    ClienteID INT NOT NULL,
+    DataInicio DATE NOT NULL,
+    DataFim DATE NOT NULL,
+    Status VARCHAR(20) DEFAULT 'Pendente',
+    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
+);
+
+-- Tabela de Detalhes dos Aluguéis
+CREATE TABLE DetalhesAluguel (
+    DetalheID INT PRIMARY KEY IDENTITY,
+    AluguelID INT NOT NULL,
+    EquipamentoID INT NOT NULL,
+    Quantidade INT NOT NULL,
+    ValorTotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (AluguelID) REFERENCES Alugueis(AluguelID),
+    FOREIGN KEY (EquipamentoID) REFERENCES Equipamentos(EquipamentoID)
+);
+
+-- Tabela de Manutenções
+CREATE TABLE Manutencoes (
+    ManutencaoID INT PRIMARY KEY IDENTITY,
+    EquipamentoID INT NOT NULL,
+    Data DATE NOT NULL,
+    Descricao VARCHAR(255),
+    Custo DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (EquipamentoID) REFERENCES Equipamentos(EquipamentoID)
+);
+
+-- Tabela de Pagamentos
+CREATE TABLE Pagamentos (
+    PagamentoID INT PRIMARY KEY IDENTITY,
+    AluguelID INT NOT NULL,
+    DataPagamento DATE NOT NULL,
+    Valor DECIMAL(10, 2) NOT NULL,
+    MetodoPagamento VARCHAR(50),
+    FOREIGN KEY (AluguelID) REFERENCES Alugueis(AluguelID)
+);
