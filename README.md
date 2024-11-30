@@ -1,12 +1,12 @@
-Projeto final da disciplina de Banco de Dados 2 da UNISATC que visa a criação de um CRUD com interação com banco de dados.
+**Projeto final da disciplina de Banco de Dados 2 da UNISATC que visa a criação de um CRUD com interação com banco de dados.**
 
-**Integrantes:**
-Guilherme Zapelini - @wguii
-Cristhian Bertan - @cristhianbertan
-Maicou Hahn - @MaicouHahn
-Davi Carlos - @davi-carlos
+### Integrantes:
+Guilherme Zapelini - @wguii<br>
+Cristhian Bertan - @cristhianbertan<br>
+Maicou Hahn - @MaicouHahn<br>
+Davi Carlos - @davi-carlos<br>
 
-**Modelo Físico**
+## Modelo Físico:
 
 Utilizamos o QuickDBD como ferramenta de modelagem.
 
