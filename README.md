@@ -5,6 +5,7 @@ Guilherme Zapelini - @wguii<br>
 Cristhian Bertan - @cristhianbertan<br>
 Maicou Hahn - @MaicouHahn<br>
 Davi Carlos - @davi-carlos<br>
+Alexandre Sartor - @AlexandreSartor
 
 ## Modelo Físico:
 
