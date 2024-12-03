@@ -1,0 +1,82 @@
+//1 - Qual é o total de equipamentos disponíveis por categoria?
+
+SELECT c.Nome AS Categoria, COUNT(e.EquipamentoID) AS TotalDisponiveis
+FROM Categorias c
+LEFT JOIN Equipamentos e ON c.CategoriaID = e.CategoriaID AND e.Status = 'Disponível'
+GROUP BY c.Nome;
+
+
+//2 - Quais clientes têm aluguéis pendentes?
+
+CREATE PROCEDURE ClientesComAlugueisPendentes
+AS
+BEGIN
+    SELECT cl.Nome, cl.Email, al.DataInicio, al.DataFim
+    FROM Clientes cl
+    JOIN Alugueis al ON cl.ClienteID = al.ClienteID
+    WHERE al.Status = 'Pendente';
+END;
+
+Execução da procedure:
+
+EXEC ClientesComAlugueisPendentes;
+
+
+//3 - Qual foi o total gasto por cada cliente em aluguéis?
+
+CREATE FUNCTION TotalGastoPorCliente(@ClienteID INT)
+RETURNS DECIMAL(10, 2)
+AS
+BEGIN
+    DECLARE @Total DECIMAL(10, 2);
+    SELECT @Total = SUM(d.ValorTotal)
+    FROM DetalhesAluguel d
+    JOIN Alugueis a ON d.AluguelID = a.AluguelID
+    WHERE a.ClienteID = @ClienteID;
+    
+    RETURN ISNULL(@Total, 0);
+END;
+
+Chamada da função:
+
+SELECT c.Nome, dbo.TotalGastoPorCliente(c.ClienteID) AS TotalGasto
+FROM Clientes c;
+
+
+//4 - Quais equipamentos precisam de manutenção?
+
+CREATE TRIGGER trg_ApósAluguel
+ON DetalhesAluguel
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Manutencoes (EquipamentoID, Data, Descricao, Custo)
+    SELECT EquipamentoID, GETDATE(), 'Manutenção necessária após aluguel', 0
+    FROM inserted 
+    WHERE (SELECT COUNT(*) FROM DetalhesAluguel WHERE EquipamentoID = inserted.EquipamentoID) > 5;
+END;
+
+
+//5 - Qual é a receita total gerada por categoria de equipamento?
+
+CREATE PROCEDURE ReceitaPorCategoria
+AS
+BEGIN
+    SELECT c.Nome AS Categoria, SUM(d.ValorTotal) AS ReceitaTotal
+    FROM DetalhesAluguel d
+    JOIN Equipamentos e ON d.EquipamentoID = e.EquipamentoID
+    JOIN Categorias c ON e.CategoriaID = c.CategoriaID
+    GROUP BY c.Nome;
+END;
+
+Execução da procedure:
+
+EXEC ReceitaPorCategoria;
+
+
+//6 - Status atual dos pagamentos realizados?
+
+SELECT p.AluguelID, p.DataPagamento, p.Valor, p.MetodoPagamento 
+FROM Pagamentos p 
+WHERE p.DataPagamento >= '2024-11-01';
+
