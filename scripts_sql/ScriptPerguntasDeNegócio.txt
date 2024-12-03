@@ -74,9 +74,23 @@ Execução da procedure:
 EXEC ReceitaPorCategoria;
 
 
-//6 - Status atual dos pagamentos realizados?
+//6 - Qual o status e os dados dos pagamentos realizados por cliente?
 
-SELECT p.AluguelID, p.DataPagamento, p.Valor, p.MetodoPagamento 
-FROM Pagamentos p 
-WHERE p.DataPagamento >= '2024-11-01';
-
+SELECT 
+    p.AluguelID,
+    p.DataPagamento,
+    p.Valor,
+    p.MetodoPagamento,
+    c.Nome AS NomeCliente,
+    c.Email AS EmailCliente,
+    a.Status AS StatusAluguel
+FROM 
+    Pagamentos p
+JOIN 
+    Alugueis a ON p.AluguelID = a.AluguelID
+JOIN 
+    Clientes c ON a.ClienteID = c.ClienteID
+WHERE 
+    p.DataPagamento >= '2024-11-01'
+ORDER BY 
+    p.DataPagamento DESC;
